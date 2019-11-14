@@ -14,6 +14,8 @@ fi
 
 groupmod -o -g ${APACHE_RUN_GROUP_ID} ${APACHE_RUN_GROUP}
 usermod -o -u ${APACHE_RUN_USER_ID} ${APACHE_RUN_USER}
+groupmod -o -g apache ${APACHE_RUN_GROUP}
+usermod -o -u apache ${APACHE_RUN_USER}
 
 # Install FileRun on first run
 if [ ! -e /var/www/html/index.php ];  then
