@@ -35,6 +35,7 @@ ENV APACHE_RUN_USER nobody
 ENV APACHE_RUN_USER_ID 65534
 ENV APACHE_RUN_GROUP nobody
 ENV APACHE_RUN_GROUP_ID 65534
+ENV ARIA2_RPC_SECRET ""
 
 COPY aux-files/db.sql /filerun.setup.sql
 COPY aux-files/autoconfig.php /
