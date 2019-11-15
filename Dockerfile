@@ -9,7 +9,7 @@ RUN apk --no-cache add bash shadow apache2 php7-apache2 php7-ldap \
 
 COPY aux-files/filerun-optimization.ini /etc/php7/conf.d/
 
-RUN whoami && curl -LO http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
+RUN whoami && curl -LO http://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
     && tar xzvf ioncube_loaders_lin_x86-64.tar.gz \
 #    && PHP_EXT_DIR=$(php -i | grep extension_dir | awk '{print $3}') \
 #    && PHP_EXT_DIR=$(php-config --extension-dir) \
