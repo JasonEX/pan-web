@@ -33,6 +33,6 @@ if [ ! -e /var/www/html/index.php ];  then
 	/wait-for-it.sh $mysql_host:$mysql_port -t 120 -- /import-db.sh
 fi
 
-sed -i 's#secret:".*"#secret:"'${ARIA2_RPC_SECRET}'"#' /var/www/html/ng/js/aria-ng-*.js
+sed -i 's#secret:"[^"]*"#secret:"'${ARIA2_RPC_SECRET}'"#' /var/www/html/ng/js/aria-ng-*.js
 
 exec "$@"
