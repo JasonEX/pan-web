@@ -4,6 +4,7 @@ set -eux
 sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html"#g' /etc/apache2/httpd.conf
 sed -i 's#Directory "/var/www/localhost/htdocs"#Directory "/var/www/html"#g' /etc/apache2/httpd.conf
 sed -i 's#AllowOverride None#AllowOverride All#' /etc/apache2/httpd.conf
+#sed -i '/LoadModule rewrite_module/s/^#//g' /etc/apache2/httpd.conf
 
 # Check if user exists
 if ! id -u ${APACHE_RUN_USER} > /dev/null 2>&1; then
