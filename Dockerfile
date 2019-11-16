@@ -1,11 +1,13 @@
 FROM php:7.3-alpine
 
-#RUN apk --no-cache add bash php7 php7-fpm php7-mysqli php7-json php7-openssl php7-curl \
-#    php7-zlib php7-xml php7-phar php7-intl php7-dom php7-xmlreader php7-ctype php7-session \
-#    php7-mbstring php7-gd nginx supervisor curl ffmpeg libjpeg-turbo-dev freetype-dev 
 RUN apk --no-cache add bash shadow apache2 php7-apache2 php7-ldap \
     php7-gd php7-pdo_mysql php7-opcache php7-mbstring php7-zip php7-xml php7-curl php7-ctype \
     php7-session php7-json mariadb-client
+
+ARG ENABLE_IMAGE_PREVIEW
+ARG ENABLE_VIDEO_PREVIEW
+RUN [ -n "${ENABLE_IMAGE_PREVIEW}" ] && apk add --no-cache graphicsmagick && echo "Image preview enabled" || echo "Image preview not enabled"
+RUN [ -n "${ENABLE_VIDEO_PREVIEW}" ] && apk add --no-cache ffmpeg && echo "Video preview enabled" || echo "Video preview not enabled"
 
 COPY aux-files/filerun-optimization.ini /etc/php7/conf.d/
 
@@ -23,7 +25,6 @@ RUN curl -o /filerun.zip -L https://filerun.com/download-latest-php73 \
     && chown xfs:xfs /user-files
 
 ARG NG_VER='1.1.4'
-
 RUN curl -o /ng.zip -L https://github.com/mayswind/AriaNg/releases/download/${NG_VER}/AriaNg-${NG_VER}.zip
 
 ENV FR_DB_HOST db
@@ -42,12 +43,8 @@ COPY aux-files/autoconfig.php /
 
 VOLUME ["/var/www/html", "/user-files"]
 
-COPY aux-files/entrypoint.sh /
-COPY aux-files/wait-for-it.sh /
-COPY aux-files/import-db.sh /
-RUN chmod +x /wait-for-it.sh
-RUN chmod +x /import-db.sh
-RUN chmod +x /entrypoint.sh
+COPY aux-files/wait-for-it.sh aux-files/import-db.sh aux-files/entrypoint.sh /
+RUN chmod +x /wait-for-it.sh /import-db.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["httpd","-D","FOREGROUND"]
