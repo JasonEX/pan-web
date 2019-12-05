@@ -9,7 +9,7 @@ RUN [ -n "${ENABLE_SSL}" ] && apk add --no-cache apach2-ssl && echo "SSL enabled
     && sed -i 's/-SSLv3/-SSLv3 +TLSv1.3/g' /etc/apache2/conf.d/ssl.conf \
     && sed -i 's/^DocumentRoot.*$/DocumentRoot "\/var\/www\/html"/g' /etc/apache2/conf.d/ssl.conf \
     && sed -i 's/^SSLCertificateFile.*$/SSLCertificateFile \/user-ssl\/server.pem/g' /etc/apache2/conf.d/ssl.conf \
-    && sed -i 's/^SSLCertificateKeyFile.*$/SSLCertificateKeyFile \/user-ssl\/server.key/g' /etc/apache2/conf.d/ssl.conf \
+    && sed -i 's/^SSLCertificateKeyFile.*$/SSLCertificateKeyFile \/user-ssl\/server.key/g' /etc/apache2/conf.d/ssl.conf
 
 ARG ENABLE_IMAGE_PREVIEW
 ARG ENABLE_VIDEO_PREVIEW
