@@ -5,11 +5,11 @@ RUN apk --no-cache add bash shadow apache2 php7-apache2 php7-ldap \
     php7-session php7-json mariadb-client
 
 ARG ENABLE_SSL
-RUN [ -n "${ENABLE_SSL}" ] && apk add --no-cache apach2-ssl && echo "SSL enabled" || echo "SSL not enabled" \
-    && sed -i 's/-SSLv3/-SSLv3 +TLSv1.3/g' /etc/apache2/conf.d/ssl.conf \
+RUN [ -n "${ENABLE_SSL}" ] && apk add --no-cache apach2-ssl && echo "SSL enabled" || echo "SSL not enabled"
+RUN [ -n "${ENABLE_SSL}" ] && sed -i 's/-SSLv3/-SSLv3 +TLSv1.3/g' /etc/apache2/conf.d/ssl.conf \
     && sed -i 's/^DocumentRoot.*$/DocumentRoot "\/var\/www\/html"/g' /etc/apache2/conf.d/ssl.conf \
     && sed -i 's/^SSLCertificateFile.*$/SSLCertificateFile \/user-ssl\/server.pem/g' /etc/apache2/conf.d/ssl.conf \
-    && sed -i 's/^SSLCertificateKeyFile.*$/SSLCertificateKeyFile \/user-ssl\/server.key/g' /etc/apache2/conf.d/ssl.conf
+    && sed -i 's/^SSLCertificateKeyFile.*$/SSLCertificateKeyFile \/user-ssl\/server.key/g' /etc/apache2/conf.d/ssl.conf || :
 
 ARG ENABLE_IMAGE_PREVIEW
 ARG ENABLE_VIDEO_PREVIEW
