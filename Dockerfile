@@ -1,6 +1,6 @@
 FROM php:7.3-alpine
 
-RUN apk --no-cache add bash shadow apache2 php7-apache2 php7-ldap \
+RUN apk --no-cache add bash shadow apache2 apache2-proxy php7-apache2 php7-ldap \
     php7-gd php7-pdo_mysql php7-opcache php7-mbstring php7-zip php7-xml php7-curl php7-ctype \
     php7-session php7-json mariadb-client
 
@@ -43,10 +43,13 @@ ENV APACHE_RUN_USER nobody
 ENV APACHE_RUN_USER_ID 65534
 ENV APACHE_RUN_GROUP nobody
 ENV APACHE_RUN_GROUP_ID 65534
+ENV ARIA2_HOST aria2
+ENV ARIA2_PORT 6800
 ENV ARIA2_RPC_SECRET ""
 
 COPY aux-files/db.sql /filerun.setup.sql
 COPY aux-files/autoconfig.php /
+COPY aux-files/ws-reverse-proxy.conf /wrp-template.conf
 
 VOLUME ["/var/www/html", "/user-files"]
 

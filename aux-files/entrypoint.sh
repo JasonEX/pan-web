@@ -1,10 +1,17 @@
 #!/bin/bash
 set -eux
 
+# Host entry fix
+ping -c1 -q host.docker.internal 2>&1 | grep "bad address" >/dev/null && echo "$(ip route show | awk '/default/ {print $3}') host.docker.internal" >> /etc/hosts && echo "Hosts File Entry Added" || :
+
 sed -i 's#^DocumentRoot ".*#DocumentRoot "/var/www/html"#g' /etc/apache2/httpd.conf
 sed -i 's#Directory "/var/www/localhost/htdocs"#Directory "/var/www/html"#g' /etc/apache2/httpd.conf
 sed -i 's#AllowOverride None#AllowOverride All#' /etc/apache2/httpd.conf
-#sed -i '/LoadModule rewrite_module/s/^#//g' /etc/apache2/httpd.conf
+sed -i '/LoadModule rewrite_module/s/^#//g' /etc/apache2/httpd.conf
+
+sed -i '/# Websocket reverse proxy setting - begin/,/# Websocket reverse proxy setting - end$/d' /etc/apache2/httpd.conf
+ARIA2_IP=$(getent hosts ${ARIA2_HOST} | awk '{ print $1 }')
+sed 's/ARIA2_HOST/'${ARIA2_IP}'/' /wrp-template.conf | sed 's/ARIA2_PORT/'${ARIA2_PORT}'/' >> /etc/apache2/httpd.conf
 
 # Check if user exists
 if ! id -u ${APACHE_RUN_USER} > /dev/null 2>&1; then
@@ -20,7 +27,7 @@ usermod -o -u ${APACHE_RUN_USER_ID} apache
 
 # Install FileRun on first run
 if [ ! -e /var/www/html/index.php ];  then
-	echo "[FileRun fresh install]"
+	echo "[FileRun Fresh Install]"
 	unzip /filerun.zip -d /var/www/html/
 	mkdir /var/www/html/ng/
 	unzip /ng.zip -d /var/www/html/ng/
