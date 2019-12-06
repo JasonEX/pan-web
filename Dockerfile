@@ -19,7 +19,7 @@ RUN [ -n "${ENABLE_VIDEO_PREVIEW}" ] && apk add --no-cache ffmpeg && echo "Video
 
 COPY aux-files/filerun-optimization.ini /etc/php7/conf.d/
 
-RUN whoami && curl -LO http://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
+RUN curl -LO http://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
     && tar xzvf ioncube_loaders_lin_x86-64.tar.gz \
 #    && PHP_EXT_DIR=$(php -i | grep extension_dir | awk '{print $3}') \
 #    && PHP_EXT_DIR=$(php-config --extension-dir) \
