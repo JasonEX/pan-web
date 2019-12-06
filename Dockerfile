@@ -5,6 +5,7 @@ RUN apk --no-cache add bash shadow apache2 apache2-proxy php7-apache2 php7-ldap 
     php7-session php7-json mariadb-client
 
 ARG ENABLE_SSL
+ENV ENABLE_SSL ${ENABLE_SSL}
 RUN [ -n "${ENABLE_SSL}" ] && apk add --no-cache apache2-ssl && echo "SSL enabled" || echo "SSL not enabled"
 RUN [ -n "${ENABLE_SSL}" ] && sed -i 's/-SSLv3/-SSLv3 +TLSv1.3/g' /etc/apache2/conf.d/ssl.conf \
     && sed -i 's/^DocumentRoot.*$/DocumentRoot "\/var\/www\/html"/g' /etc/apache2/conf.d/ssl.conf \
