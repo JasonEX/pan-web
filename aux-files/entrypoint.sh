@@ -42,5 +42,8 @@ if [ ! -e /var/www/html/index.php ];  then
 fi
 
 sed -i 's#secret:"[^"]*"#secret:"'${ARIA2_RPC_SECRET}'"#' /var/www/html/ng/js/aria-ng-*.js
+sed -i 's#,rpcPort:"[^"]*"#,rpcPort:"'${WEB_PORT}'"#' /var/www/html/ng/js/aria-ng-*.js
+sed -i 's#,rpcInterface:"[^"]*"#,rpcInterface:"aria2/jsonrpc"#' /var/www/html/ng/js/aria-ng-*.js
+sed -i 's#,protocol:"[^"]*"#,protocol:"ws"#' /var/www/html/ng/js/aria-ng-*.js
 
 exec "$@"
