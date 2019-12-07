@@ -41,7 +41,6 @@ if [ ! -e /var/www/html/index.php ];  then
 	/wait-for-it.sh $mysql_host:$mysql_port -t 120 -- /import-db.sh
 fi
 
-sed -i 's#secret:"[^"]*"#secret:"'${ARIA2_RPC_SECRET}'"#' /var/www/html/ng/js/aria-ng-*.js
 sed -i 's#,rpcPort:"[^"]*"#,rpcPort:"'${WEB_PORT}'"#' /var/www/html/ng/js/aria-ng-*.js
 sed -i 's#,rpcInterface:"[^"]*"#,rpcInterface:"aria2/jsonrpc"#' /var/www/html/ng/js/aria-ng-*.js
 sed -i 's#,defaultSecureProtocol:"[^"]*"#,defaultSecureProtocol:"wss"#' /var/www/html/ng/js/aria-ng-*.js
