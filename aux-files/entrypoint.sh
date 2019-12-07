@@ -44,11 +44,7 @@ fi
 sed -i 's#secret:"[^"]*"#secret:"'${ARIA2_RPC_SECRET}'"#' /var/www/html/ng/js/aria-ng-*.js
 sed -i 's#,rpcPort:"[^"]*"#,rpcPort:"'${WEB_PORT}'"#' /var/www/html/ng/js/aria-ng-*.js
 sed -i 's#,rpcInterface:"[^"]*"#,rpcInterface:"aria2/jsonrpc"#' /var/www/html/ng/js/aria-ng-*.js
-if [ -n ${ENABLE_SSL} ]; then
-	sed -i 's#,protocol:"[^"]*"#,protocol:"wss"#' /var/www/html/ng/js/aria-ng-*.js
-	sed -i 's#,defaultSecureProtocol:"[^"]*"#,defaultSecureProtocol:"wss"#' /var/www/html/ng/js/aria-ng-*.js
-else
-	sed -i 's#,protocol:"[^"]*"#,protocol:"ws"#' /var/www/html/ng/js/aria-ng-*.js
-fi
+sed -i 's#,defaultSecureProtocol:"[^"]*"#,defaultSecureProtocol:"wss"#' /var/www/html/ng/js/aria-ng-*.js
+sed -i 's#,protocol:"[^"]*"#,protocol:"ws"#' /var/www/html/ng/js/aria-ng-*.js
 
 exec "$@"
