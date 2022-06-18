@@ -13,10 +13,11 @@ sed -i '/# Websocket reverse proxy setting - begin/,/# Websocket reverse proxy s
 ARIA2_IP=$(getent hosts ${ARIA2_HOST} | awk '{ print $1 }')
 sed 's/ARIA2_HOST/'${ARIA2_IP}'/' /wrp-template.conf | sed 's/ARIA2_PORT/'${ARIA2_PORT}'/' >> /etc/apache2/httpd.conf
 
-# Check if user exists
+groupadd -f ${APACHE_RUN_GROUP}
+
+# Check if $APACHE_RUN_USER exists
 if ! id -u ${APACHE_RUN_USER} > /dev/null 2>&1; then
 	echo "The user ${APACHE_RUN_USER} does not exist, creating..."
-	addgroup ${APACHE_RUN_GROUP}
 	adduser -G ${APACHE_RUN_GROUP} -D ${APACHE_RUN_USER}
 fi
 

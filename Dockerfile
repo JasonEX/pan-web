@@ -1,6 +1,6 @@
-FROM php:7.3-alpine
+FROM alpine:3.15
 
-RUN apk --no-cache add bash shadow apache2 apache2-proxy php7-apache2 php7-ldap \
+RUN apk --no-cache add bash shadow curl apache2 apache2-proxy php7-apache2 php7-ldap \
     php7-gd php7-pdo_mysql php7-opcache php7-mbstring php7-zip php7-xml php7-curl php7-ctype \
     php7-session php7-json mariadb-client
 
@@ -17,22 +17,19 @@ ARG ENABLE_VIDEO_PREVIEW
 RUN [ -n "${ENABLE_IMAGE_PREVIEW}" ] && apk add --no-cache graphicsmagick && echo "Image preview enabled" || echo "Image preview not enabled"
 RUN [ -n "${ENABLE_VIDEO_PREVIEW}" ] && apk add --no-cache ffmpeg && echo "Video preview enabled" || echo "Video preview not enabled"
 
-COPY aux-files/filerun-optimization.ini /etc/php7/conf.d/
-
 RUN curl -LO http://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz \
     && tar xzvf ioncube_loaders_lin_x86-64.tar.gz \
 #    && PHP_EXT_DIR=$(php -i | grep extension_dir | awk '{print $3}') \
 #    && PHP_EXT_DIR=$(php-config --extension-dir) \
     && PHP_EXT_DIR=/usr/lib/php7/modules/ \
-    && cp "ioncube/ioncube_loader_lin_7.3.so" $PHP_EXT_DIR \
-    && echo "zend_extension=ioncube_loader_lin_7.3.so" >> /etc/php7/conf.d/00_ioncube_loader_lin_7.3.ini \
+    && cp "ioncube/ioncube_loader_lin_7.4.so" $PHP_EXT_DIR \
+    && echo "zend_extension=ioncube_loader_lin_7.4.so" >> /etc/php7/conf.d/00_ioncube_loader_lin_7.ini \
     && rm -rf ioncube ioncube_loaders_lin_x86-64.tar.gz
 
-RUN curl -o /filerun.zip -L https://filerun.com/download-latest-php73 \
-    && mkdir /user-files \
+RUN mkdir /user-files \
     && chown xfs:xfs /user-files
 
-ARG NG_VER='1.1.4'
+ARG NG_VER='1.2.4'
 RUN curl -o /ng.zip -L https://github.com/mayswind/AriaNg/releases/download/${NG_VER}/AriaNg-${NG_VER}.zip
 
 ENV FR_DB_HOST db
@@ -49,9 +46,11 @@ ENV ARIA2_PORT 6800
 ENV WEB_PORT ${ENABLE_SSL:+443}
 ENV WEB_PORT ${WEB_PORT:-80}
 
+COPY aux-files/filerun.zip /
 COPY aux-files/db.sql /filerun.setup.sql
 COPY aux-files/autoconfig.php /
 COPY aux-files/ws-reverse-proxy.conf /wrp-template.conf
+COPY aux-files/filerun-optimization.ini /etc/php7/conf.d/
 
 VOLUME ["/var/www/html", "/user-files"]
 
